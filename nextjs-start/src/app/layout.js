@@ -6,23 +6,20 @@ import { getAuthenticatedAppForUser } from "@/src/lib/firebase/firebase";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "FriendlyEats",
+  title: "Yes Event",
   description:
-    "FriendlyEats is a restaurant review website built with Next.js and Firebase.",
+    "Yes! Eventmanagement is quick, easy, and fun with YesEvent.",
 };
 
-
 export default async function RootLayout({ children }) {
-    const { currentUser } = await getAuthenticatedAppForUser();
+  const { currentUser } = await getAuthenticatedAppForUser();
+
   return (
     <html lang="en">
-
-          <body>
-            <Header initialUser={currentUser?.toJSON()}/>
-
-            <main>{children}</main>
-          </body>
-
+      <body>
+        <Header initialUser={currentUser?.toJSON()} />
+        <main>{children}</main>
+      </body>
     </html>
   );
 }

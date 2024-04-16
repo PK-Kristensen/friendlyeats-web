@@ -53,29 +53,28 @@ const updateWithRating = async (
 
 export async function addReviewToRestaurant(db, restaurantId, review) {
 	if (!restaurantId) {
-		throw new Error("No restaurant ID has been provided.");
+			throw new Error("No restaurant ID was provided.");
 	}
 
 	if (!review) {
-		throw new Error("A valid review has not been provided.");
+			throw new Error("A valid review has not been provided.");
 	}
 
 	try {
-		const docRef = doc(collection(db, "restaurants"), restaurantId);
-		const newRatingDocument = doc(
-			collection(db, `restaurants/${restaurantId}/ratings`)
-		);
+			const docRef = doc(collection(db, "restaurants"), restaurantId);
+			const newRatingDocument = doc(
+					collection(db, `restaurants/${restaurantId}/ratings`)
+			);
 
-		// corrected line
-		await runTransaction(db, transaction =>
-			updateWithRating(transaction, docRef, newRatingDocument, review)
-		);
+			await runTransaction(db, transaction =>
+					updateWithRating(transaction, docRef, newRatingDocument, review)
+			);
 	} catch (error) {
-		console.error(
-			"There was an error adding the rating to the restaurant",
-			error
-		);
-		throw error;
+			console.error(
+					"There was an error adding the rating to the restaurant.",
+					error
+			);
+			throw error;
 	}
 }
 
