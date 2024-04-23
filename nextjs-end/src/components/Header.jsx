@@ -5,8 +5,8 @@ import {
 	signInWithGoogle,
 	signOut,
 	onAuthStateChanged
-} from "@/src/lib/firebase/auth.js";
-import { addFakeRestaurantsAndReviews } from "@/src/lib/firebase/firestore.js";
+} from "../../src/lib/firebase/auth.js";
+import { addFakeRestaurantsAndReviews } from "../../src/lib/firebase/firestore.js";
 import { useRouter } from "next/navigation";
 
 function useUserSession(initialUser) {

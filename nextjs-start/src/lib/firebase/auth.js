@@ -5,7 +5,7 @@ import {
 } from "firebase/auth";
 import { doc, setDoc, getFirestore } from "firebase/firestore"; // Import necessary Firestore functions
 
-import { auth } from "@/src/lib/firebase/firebase";
+import { auth } from "./firebase";
 
 //onAuthStateChanged sets up a listener for changes in the authentication state (e.g., user logs in or out). This is crucial for dynamically updating your application's UI based on the user's sign-in status.
 export function onAuthStateChanged(cb) {
@@ -35,7 +35,6 @@ export async function signInWithGoogle() {
       // Add more fields as necessary
     }, { merge: true }); // Use merge option to update the document or create it if it doesn't exist
 
-    console.log("Signed in with Google:", user.email);
   } catch (error) {
     if (error.code === 'auth/account-exists-with-different-credential') {
       // Handle account exists with different credential

@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	experimental: {
-		serverActions: true,
+		optimizeCss: true, // enabling this will enable SSR for Tailwind
 	}
 };
 
