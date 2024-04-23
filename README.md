@@ -2,7 +2,7 @@
 
 ## Introduction
 
-FriendlyEats is a restaurant recommendation app built on Cloud Firestore.
+YesEvent is a restaurant recommendation app built on Cloud Firestore.
 For more information about Firestore visit [the docs][firestore-docs].
 
 This project is the starting point for the [Cloud Firestore Web Codelab][codelab],
