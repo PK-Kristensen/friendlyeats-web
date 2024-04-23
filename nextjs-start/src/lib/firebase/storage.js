@@ -1,3 +1,4 @@
+/*
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 import { storage } from "@/src/lib/firebase/firebase";
@@ -9,3 +10,4 @@ export async function updateRestaurantImage(restaurantId, image) {}
 
 async function uploadImage(restaurantId, image) {}
 // Replace the two functions above
+*/

@@ -1,5 +1,5 @@
 
-import EventListings from "@/src/components/EventListings";
+
 export default function Login({ searchParams }) {
   return (
     <div>
