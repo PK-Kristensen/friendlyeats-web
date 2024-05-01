@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	experimental: {
-		optimizeCss: true, // enabling this will enable SSR for Tailwind
-	}
+		optimizeCss: true, 
+		appDir: true, 
+	},
+	pagesPath: 'app',
 };
 
 module.exports = nextConfig;
