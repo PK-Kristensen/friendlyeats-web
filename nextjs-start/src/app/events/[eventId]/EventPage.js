@@ -17,7 +17,7 @@ import EventDetails from './EventDetails';
 import { useEventPlan } from './EventPlanContext';
 
 
-export default function EventPage({ user, eventId }) {
+export default function EventPage({ user, eventId}) {
   console.log('EventPage user:', user);
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -99,7 +99,7 @@ export default function EventPage({ user, eventId }) {
     };
   
     fetchEventAndCheckAuth();
-  
+    console.log('EventPage useEffect', eventDays);
   }, [eventId, user, setEventDays]); // Added setEventDays to the dependency array if needed
 
   if (loading) {
@@ -111,11 +111,11 @@ export default function EventPage({ user, eventId }) {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="w-full max-w-4xl p-4">
+    <div className="flex flex-col max-w-14xl p-4 space-y-4 flex-start">
+      <div className="flex-1">
         <EventDetails event={event} eventId={eventId} setEvent={setEvent} user={user} />
       </div>
-      <div className="w-full max-w-4xl px-4 ">
+      <div className="flex-1">
         <EventPlan user={user} eventId={eventId} event={event} />
       </div>
     </div>

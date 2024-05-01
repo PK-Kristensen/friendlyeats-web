@@ -48,8 +48,8 @@ const EventLog = ({ eventId }) => {
   }
 
   return (
-    <div className="max-w-md p-4 bg-blue-100 rounded-lg shadow-md mt-4">
-      <h3 className="text-lg font-semibold text-gray-700 mb-2">Siste endringer</h3>
+    <div className="max-w-md p-4 bg-blue-100 rounded-lg shadow-md mt-4" style={{ fontSize: '0.8rem'}}>
+      <h3 className="text-md font-semibold text-gray-700 mb-2">Siste endringer</h3>
       {logs.length > 0 ? (
         <ul className="list-disc pl-5 space-y-2">
           {logs.slice(0, visibleLogsCount).map((log, index) => (

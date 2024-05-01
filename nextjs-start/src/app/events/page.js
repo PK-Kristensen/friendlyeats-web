@@ -3,7 +3,7 @@ import EventListings from "../../../src/components/EventListings";
 export default function Home({ searchParams }) {
 
   return (
-    <main className="main__home">
+    <main>
         <EventListings searchParams={searchParams} />
     </main>
   );

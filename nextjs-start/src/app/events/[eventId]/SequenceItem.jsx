@@ -1,18 +1,24 @@
-'use client';
-import React, { useState, useCallback, useEffect } from 'react';
-import { doc, writeBatch, updateDoc, getDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../../../lib/firebase/firebase';
-import debounce from 'lodash/debounce';
+"use client";
+import React, { useState, useCallback, useEffect } from "react";
+import {
+  doc,
+  writeBatch,
+  updateDoc,
+  getDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+import { db } from "../../../lib/firebase/firebase";
+import debounce from "lodash/debounce";
 import {
   calculateEndTime,
   calculateDuration,
   getRandomColor,
-} from '../../../lib/utilsFunctions';
-import { useEventPlan } from './EventPlanContext';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css'; // Include the Quill CSS
-import 'react-quill/dist/quill.bubble.css';
-import styles from './SequenceItem.module.css';
+} from "../../../lib/utilsFunctions";
+import { useEventPlan } from "./EventPlanContext";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css"; // Include the Quill CSS
+import "react-quill/dist/quill.bubble.css";
+import styles from "./SequenceItem.module.css";
 
 const SequenceItem = ({
   sequence,
@@ -20,32 +26,31 @@ const SequenceItem = ({
   eventDayId,
   onAddSequence,
   onDeleteSequence,
-  user
+  user,
 }) => {
-  const { eventDays, setEventDays } = useEventPlan();
+  const { eventDays } = useEventPlan();
   const [tempStartTime, setTempStartTime] = useState(sequence.startTime);
   const [tempDescription, setTempDescription] = useState(sequence.description);
   const [tempDuration, setTempDuration] = useState(sequence.durationMinutes);
   const [tempHeader, setTempHeader] = useState(sequence.header);
-  const [tempTags, setTempTags] = useState(sequence.tags || []);
   const [editorHtml, setEditorHtml] = useState(sequence.description);
+  const [tempTags, setTempTags] = useState(sequence.tags || []);
   const formats = [
-    'header',
-    'font',
-    'size',
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'blockquote',
-    'list',
-    'bullet',
-    'indent',
-    'link',
+    "header",
+    "font",
+    "size",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "indent",
+    "link",
     //'image',
     //'video',
   ];
-
 
   useEffect(() => {
     setTempStartTime(sequence.startTime);
@@ -60,12 +65,11 @@ const SequenceItem = ({
   ]);
 
   useEffect(() => {
-    setTempStartTime(sequence.startTime || ''); // Default to empty string if undefined
-    setTempDescription(sequence.description || ''); // Default to empty string if undefined
+    setTempStartTime(sequence.startTime || ""); // Default to empty string if undefined
+    setTempDescription(sequence.description || ""); // Default to empty string if undefined
     setTempDuration(sequence.durationMinutes || 0); // Default to 0 if undefined
-    setTempHeader(sequence.header || ''); // Default to empty string if undefined
-}, [sequence]);
-
+    setTempHeader(sequence.header || ""); // Default to empty string if undefined
+  }, [sequence]);
 
   const updateFirestore = useCallback(
     debounce(
@@ -73,7 +77,7 @@ const SequenceItem = ({
         // Find the current event day
         const eventDay = eventDays.find((ed) => ed.id === eventDayId);
         const subsequentSequences = eventDay.sequences.filter(
-          (seq) => seq.index > sequence.index,
+          (seq) => seq.index > sequence.index
         );
 
         const batch = writeBatch(db);
@@ -81,12 +85,12 @@ const SequenceItem = ({
         // Update the current sequence
         const sequenceRef = doc(
           db,
-          'events',
+          "events",
           eventId,
-          'eventDays',
+          "eventDays",
           eventDayId,
-          'sequences',
-          sequence.id,
+          "sequences",
+          sequence.id
         );
         batch.update(sequenceRef, {
           startTime: newStartTime,
@@ -102,16 +106,16 @@ const SequenceItem = ({
         subsequentSequences.forEach((subsequentSeq) => {
           const seqRef = doc(
             db,
-            'events',
+            "events",
             eventId,
-            'eventDays',
+            "eventDays",
             eventDayId,
-            'sequences',
-            subsequentSeq.id,
+            "sequences",
+            subsequentSeq.id
           );
           const seqNewEndTime = calculateEndTime(
             nextStartTime,
-            subsequentSeq.durationMinutes,
+            subsequentSeq.durationMinutes
           );
           batch.update(seqRef, {
             startTime: nextStartTime,
@@ -122,17 +126,17 @@ const SequenceItem = ({
 
         return batch
           .commit()
-          .catch((error) => console.error('Error updating sequences:', error));
+          .catch((error) => console.error("Error updating sequences:", error));
       },
-      500,
+      500
     ),
-    [sequence, eventDayId, eventDays],
+    [sequence, eventDayId, eventDays]
   );
 
   const handleBlur = async () => {
     const newEndTime = calculateEndTime(tempStartTime, tempDuration);
     if (tempDescription == undefined) {
-      setTempDescription('');
+      setTempDescription("");
     }
     try {
       // Perform the Firestore batch update and wait for it to complete
@@ -142,58 +146,56 @@ const SequenceItem = ({
         tempHeader,
         tempDuration,
         tempDescription,
-        tempTags,
+        tempTags
       );
 
-      let docRef = doc(
-        db,
-        'events',
-        eventId);
+      let docRef = doc(db, "events", eventId);
 
       await logChange(docRef, {
-        action: 'updateSequence',
-        details: sequence.header !== tempHeader
-          ? `endret tittel fra '${sequence.header}' til '${tempHeader}'`
-          : sequence.startTime !== tempStartTime
-          ? `endret starttid fra '${sequence.startTime}' til '${tempStartTime}'`
-          : sequence.durationMinutes !== tempDuration
-          ? `endret varighet fra '${sequence.durationMinutes}' til '${tempDuration}'`
-          : sequence.description !== tempDescription
-          ? `endret beskrivelse fra '${sequence.description}' til '${tempDescription}'`
-         // : sequence.tags !== tempTags
-//          ? `endret tags fra '${sequence.tags}' til '${tempTags}'`
-          : `endret sekvens`,
+        action: "updateSequence",
+        details:
+          sequence.header !== tempHeader
+            ? `endret tittel fra '${sequence.header}' til '${tempHeader}'`
+            : sequence.startTime !== tempStartTime
+            ? `endret starttid fra '${sequence.startTime}' til '${tempStartTime}'`
+            : sequence.durationMinutes !== tempDuration
+            ? `endret varighet fra '${sequence.durationMinutes}' til '${tempDuration}'`
+            : sequence.description !== tempDescription
+            ? `endret beskrivelse fra '${sequence.description}' til '${tempDescription}'`
+            : // : sequence.tags !== tempTags
+              //          ? `endret tags fra '${sequence.tags}' til '${tempTags}'`
+              `endret sekvens`,
         user: user, // Assuming you have user details available
-        timestamp: new Date().toISOString() // Using ISO string format for the timestamp
+        timestamp: new Date().toISOString(), // Using ISO string format for the timestamp
       });
       // No need to manually fetch sequences as onSnapshot will update state
     } catch (error) {
-      console.error('Error updating sequences:', error);
+      console.error("Error updating sequences:", error);
     }
   };
 
   const logChange = async (docRef, changeDetails) => {
     try {
       // Check each field in changeDetails for undefined values and replace them
-      Object.keys(changeDetails).forEach(key => {
+      Object.keys(changeDetails).forEach((key) => {
         if (changeDetails[key] === undefined) {
-          changeDetails[key] = null;  // or some other sensible default
+          changeDetails[key] = null; // or some other sensible default
         }
       });
-  
+
       // Prepare the log entry with a timestamp
       const logEntry = {
         ...changeDetails,
-        timestamp: new Date().toISOString() // Ensuring all fields are defined
+        timestamp: new Date().toISOString(), // Ensuring all fields are defined
       };
-  
+
       // Retrieve the current document to append to the array
       const docSnapshot = await getDoc(docRef);
       if (docSnapshot.exists()) {
         // Get current logs array and append new log entry
         const currentLogs = docSnapshot.data().eventLogs || [];
         const updatedLogs = [...currentLogs, logEntry];
-  
+
         // Update the document with the new logs array
         await updateDoc(docRef, {
           eventLogs: updatedLogs,
@@ -206,18 +208,9 @@ const SequenceItem = ({
       console.error("Error logging changes:", error);
     }
   };
-  
-  
-  
 
   const handleChangeStartTime = (e) => {
     setTempStartTime(e.target.value);
-  };
-
-  const handleQuillChange = (content) => {
-    setEditorHtml(content);
-    // Update the description in your sequence object or state if needed
-    setTempDescription(content);
   };
 
   const handleChangeDuration = (e) => {
@@ -228,19 +221,25 @@ const SequenceItem = ({
     setTempHeader(e.target.value);
   };
 
+  const handleQuillChange = (content) => {
+    setEditorHtml(content);
+    // Update the description in your sequence object or state if needed
+    setTempDescription(content);
+  };
+
   const handleChangeTags = (e) => {
     // Detect when Enter is pressed or when a comma is added
     if (
-      e.key === 'Enter' ||
-      e.key === ',' ||
-      e.key === ' ' ||
-      e.key === 'Tab'
+      e.key === "Enter" ||
+      e.key === "," ||
+      e.key === " " ||
+      e.key === "Tab"
     ) {
       e.preventDefault();
       let newTag = e.target.value.trim();
       // Check for duplicate tags and non-empty string
       if (newTag && !tempTags.includes(newTag)) {
-        newTag = newTag.replace(/,/, ''); // Remove commas from the new tag
+        newTag = newTag.replace(/,/, ""); // Remove commas from the new tag
 
         // Find if the tag already exists in any of the event days
         let existingColor = null;
@@ -269,7 +268,7 @@ const SequenceItem = ({
         }
 
         setTempTags([...tempTags, newTag]);
-        e.target.value = ''; // Clear the input field
+        e.target.value = ""; // Clear the input field
         handleSubmitTags([...tempTags, newTag]); // Pass the new tags array to submit
       }
     }
@@ -284,12 +283,12 @@ const SequenceItem = ({
   const handleSubmitTags = async (tags) => {
     const sequenceRef = doc(
       db,
-      'events',
+      "events",
       eventId,
-      'eventDays',
+      "eventDays",
       eventDayId,
-      'sequences',
-      sequence.id,
+      "sequences",
+      sequence.id
     );
 
     // Prepare the updated tagsColorMap
@@ -297,7 +296,7 @@ const SequenceItem = ({
     tags.forEach((tag) => {
       if (!updatedTagsColorMap[tag]) {
         // Assign a default color if the tag is new and doesn't have a color yet
-        updatedTagsColorMap[tag] = '#FFFFFF'; // Default color, you can change this
+        updatedTagsColorMap[tag] = "#FFFFFF"; // Default color, you can change this
       }
     });
 
@@ -307,7 +306,7 @@ const SequenceItem = ({
         tagsColorMap: updatedTagsColorMap,
       });
     } catch (error) {
-      console.error('Error updating tags:', error);
+      console.error("Error updating tags:", error);
     }
   };
 
@@ -315,9 +314,9 @@ const SequenceItem = ({
   const getBorderColorForSequence = () => {
     if (sequence.tags?.length > 0 && sequence.tagsColorMap) {
       const firstTag = sequence.tags[0];
-      return sequence.tagsColorMap[firstTag] || 'transparent'; // Default to 'transparent' if no color found
+      return sequence.tagsColorMap[firstTag] || "transparent"; // Default to 'transparent' if no color found
     }
-    return 'transparent'; // Default to 'transparent' if no tags
+    return "transparent"; // Default to 'transparent' if no tags
   };
 
   const borderColor = getBorderColorForSequence(); // Call the function to get the border color
@@ -325,7 +324,7 @@ const SequenceItem = ({
   const renderTags = () => {
     return tempTags.map((tag, index) => {
       // Find the color for the tag from the tagsColorMap or default to a fallback color
-      const tagColor = sequence.tagsColorMap[tag] || 'bg-gray-200';
+      const tagColor = sequence.tagsColorMap[tag] || "bg-gray-200";
       return (
         <span
           key={index}
@@ -343,20 +342,21 @@ const SequenceItem = ({
 
   return (
     <div
-      className={`mb-3 rounded-lg bg-gray-100 p-1 shadow-lg sm:px-4 sm:py-1 ${
+      className={`mb-3 rounded-lg bg-gray-100 p-1 shadow-lg sm:px-4 sm:py-1${
         borderColor && `border-t-4`
       }`}
       style={{ borderColor }} // Apply the border color style
     >
-      {' '}
-      <div className="grid grid-cols-4 grid-rows-3 items-center gap-0 sm:gap-2 lg:grid-cols-12">
-        <div className="col-span-4 rounded bg-blue-500 p-2 text-center lg:col-span-1">
+      {" "}
+      <div className="grid lg:grid-cols-12 gap-0 sm:gap-2 items-start">
+        {/* Index Wrapper */}
+        <div className="lg:col-span-1 bg-blue-500 p-2 text-center rounded">
           <p className="text-sm font-semibold text-white">
             {sequence.index + 1}
           </p>
         </div>
-
-        <div className="col-span-4 sm:col-span-2 lg:w-4/5">
+        {/* Start time Wrapper */}
+        <div className="lg:col-span-1 sm:col-span-2">
           <input
             id="startTime"
             type="time"
@@ -366,8 +366,8 @@ const SequenceItem = ({
             className="sd:text-md w-full border-none bg-transparent text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-300"
           />
         </div>
-
-        <div className="col-span-4 sm:col-span-5">
+        {/* Header Wrapper */}
+        <div className="lg:col-span-10 sm:col-span-5">
           <input
             type="text"
             value={tempHeader}
@@ -378,34 +378,13 @@ const SequenceItem = ({
           />
         </div>
 
-        {/* Tags Section */}
-         {/*
-        <div className="align-center hidden lg:col-span-4 lg:grid lg:grid-cols-12 lg:gap-4">
-          Tags input 
-          <div className="flex items-center lg:col-span-5">
-            <input
-              id="tags"
-              type="text"
-              onKeyDown={handleChangeTags}
-              className="mx-0 block w-full rounded-md border-b border-l border-t border-gray-300 px-3 py-1 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-              placeholder="Add tags"
-              maxLength={10}
-            />
-          </div>
-          <div className="flex justify-end lg:col-span-7">
-            <div className="mb-2 mt-2 flex flex-wrap">{renderTags()}</div>
-          </div>
-        </div>
-          */}
-
-        {/*Duration Wrapper */}
-
-        <div className="row-span-2 hidden sm:mt-0 sm:flex sm:flex-col sm:justify-center lg:col-start-1 lg:mt-0">
+        {/* Duration Wrapper */}
+        <div className="lg:col-span-1 col-span-2 row-span-2 hidden sm:mt-0 sm:flex sm:flex-col sm:justify-center lg:w-16 lg:mx-auto">
           <p
             htmlFor="durationMinutes"
             className="text-xs font-semibold text-gray-700"
           >
-            Varighet{' '}
+            Varighet{" "}
           </p>
           <input
             id="durationMinutes"
@@ -413,7 +392,7 @@ const SequenceItem = ({
             value={tempDuration}
             onChange={handleChangeDuration}
             onBlur={handleBlur}
-            className="self-left w-full border-none bg-transparent px-0 py-0 text-sm font-semibold text-blue-500 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            className="w-full border-none bg-transparent px-0 py-0 text-sm font-semibold text-blue-500 focus:outline-none focus:ring-2 focus:ring-indigo-300"
             placeholder="min"
           />
         </div>
@@ -421,7 +400,7 @@ const SequenceItem = ({
         {/* Description Textarea Wrapper */}
         <div className="col-span-4 row-span-2 lg:col-span-10 lg:col-start-2">
           <div className={styles.quillContainer}>
-            {' '}
+            {" "}
             {/* Use the CSS module class here */}
             <ReactQuill
               value={editorHtml}
@@ -431,19 +410,19 @@ const SequenceItem = ({
               theme="bubble"
               className="border-none bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
               placeholder="notater.."
-              style={{ minHeight: '5rem' }}
+              style={{ minHeight: "5rem" }}
             />
           </div>
         </div>
 
         {/* End Time Display */}
-        <div className="group relative col-span-4 row-span-2 flex flex-col items-center justify-center lg:col-span-1">
+        <div className="lg:col-span-1 col-span-4 row-span-2 group relative flex flex-col items-center justify-center">
           <p className="text-xs font-semibold text-gray-700">
             Slutt tid: <br />
             <span className="text-blue-500">
               {calculateEndTime(
                 sequence.startTime,
-                parseInt(sequence.durationMinutes, 10) || 0,
+                parseInt(sequence.durationMinutes, 10) || 0
               )}
             </span>
             <span className="invisible absolute bottom-full left-1/2 mb-2 w-32 -translate-x-1/2 transform rounded bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity duration-300 group-hover:visible group-hover:opacity-100">

@@ -15,9 +15,7 @@ import Select from "react-select";
 import debounce from "lodash.debounce";
 import { arrayUnion } from "firebase/firestore";
 
-
 const EventDetails = ({ event, setEvent, user }) => {
-  console.log('event details:', user);
   const [formData, setFormData] = useState({
     name: event?.name || "",
     startDate: event?.startDate || "",
@@ -66,7 +64,6 @@ const EventDetails = ({ event, setEvent, user }) => {
     setUserEmails(users);
   }, 300);
 
-
   const handleSelectInputChange = (input) => {
     setInputValue(input);
   };
@@ -96,8 +93,8 @@ const EventDetails = ({ event, setEvent, user }) => {
   };
 
   const logChange = async (eventRef, field, oldValue, newValue, userProp) => {
-    console.log('user:', userProp); // Should log the user prop
-    console.log('logg:', eventRef); // Should log the user prop
+    console.log("user:", userProp); // Should log the user prop
+    console.log("logg:", eventRef); // Should log the user prop
     // Create the log entry
     const logEntry = {
       field,
@@ -105,10 +102,10 @@ const EventDetails = ({ event, setEvent, user }) => {
       newValue,
       user: user,
       details: `endret ${field} fra ${oldValue} til ${newValue}`,
-      timestamp: new Date().toISOString() // Using ISO string format for the timestamp
+      timestamp: new Date().toISOString(), // Using ISO string format for the timestamp
       // Don't directly use serverTimestamp() here
     };
-  
+
     // Update the event document to append the new log entry
     // And separately set the timestamp using serverTimestamp
     try {
@@ -116,107 +113,108 @@ const EventDetails = ({ event, setEvent, user }) => {
         eventLogs: arrayUnion(logEntry),
         lastUpdated: serverTimestamp(), // Use serverTimestamp here
       });
-      console.log('updated..:', logEntry);
+      console.log("updated..:", logEntry);
     } catch (error) {
       console.error("Error updating event logs:", error);
     }
-  }
-  
+  };
 
   return (
-    <div className="bg-white shadow rounded-lg p-3 mt-0 max-w-4xl mx-auto ">
-      <h2 className="text-xl font-bold text-center mb-6">
+    <div className="bg-white shadow rounded-lg p-6 max-w-4xl">
+      <h2 className="text-xl font-bold text-center mb-8">
         {event?.name || "Arrangementsdetaljer"}
       </h2>
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
-        <EditableField
-          label="Navn"
-          value={formData.name}
-          name="name"
-          onBlur={handleBlur}
-          onChange={handleInputChange}
-        />
-        <EditableField
-          type="date"
-          label="Startdato"
-          value={formData.startDate}
-          name="startDate"
-          onBlur={handleBlur}
-          onChange={handleInputChange}
-        />
-        <EditableField
-          type="date"
-          label="Sluttdato"
-          value={formData.endDate}
-          name="endDate"
-          onBlur={handleBlur}
-          onChange={handleInputChange}
-        />
-        <EditableField
-          label="Sted"
-          value={formData.location}
-          name="location"
-          onBlur={handleBlur}
-          onChange={handleInputChange}
-        />
-        <EditableField
-          type="number"
-          label="Deltakere"
-          value={formData.attendees}
-          name="attendees"
-          onBlur={handleBlur}
-          onChange={handleInputChange}
-        />
-        <div className="sm:col-span-1">
-          <label
-            htmlFor="rbac"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Del med andre
-          </label>
-          <Select
-            id="rbac"
-            value={rbacOptions}
-            onChange={handleSelectChange}
-            onInputChange={handleSelectInputChange}
-            options={userEmails}
-            className="basic-multi-select"
-            classNamePrefix="select"
-            isMulti={true}
-            isClearable={user.uid === event.createdBy}
-            isSearchable={true}
-            placeholder="Skriv for å søke..."
-            noOptionsMessage={() => "Ingen resultater"}
+      <div className="flex flex-wrap justify-between gap-6">
+        <div className="flex flex-col gap-6 flex-1 min-w-[250px]">
+          <EditableField
+            label="Navn"
+            value={formData.name}
+            name="name"
+            onBlur={handleBlur}
+            onChange={handleInputChange}
           />
+          <EditableField
+            type="date"
+            label="Startdato"
+            value={formData.startDate}
+            name="startDate"
+            onBlur={handleBlur}
+            onChange={handleInputChange}
+          />
+          <EditableField
+            type="date"
+            label="Sluttdato"
+            value={formData.endDate}
+            name="endDate"
+            onBlur={handleBlur}
+            onChange={handleInputChange}
+          />
+        </div>
+  
+        <div className="flex flex-col gap-6 flex-1 min-w-[250px]">
+          <EditableField
+            label="Sted"
+            value={formData.location}
+            name="location"
+            onBlur={handleBlur}
+            onChange={handleInputChange}
+          />
+          <EditableField
+            type="number"
+            label="Deltakere"
+            value={formData.attendees}
+            name="attendees"
+            onBlur={handleBlur}
+            onChange={handleInputChange}
+          />
+          <div className="w-full">
+            <label htmlFor="rbac" className="block text-sm font-medium text-gray-700">
+              Del med andre
+            </label>
+            <Select
+              id="rbac"
+              value={rbacOptions}
+              onChange={handleSelectChange}
+              onInputChange={handleSelectInputChange}
+              options={userEmails}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              isMulti={true}
+              isClearable={user.uid === event.createdBy}
+              isSearchable={true}
+              placeholder="Skriv for å søke..."
+              noOptionsMessage={() => "Ingen resultater"}
+            />
+          </div>
         </div>
       </div>
     </div>
   );
-};
-
-const EditableField = ({
-  label,
-  value,
-  name,
-  onChange,
-  onBlur,
-  type = "text",
-}) => (
-  <div className="flex-1">
-    <label htmlFor={name} className="block text-sm font-medium text-gray-700">
-      {label}
-    </label>
-    <input
-      type={type}
-      name={name}
-      id={name}
-      value={value}
-      onChange={(e) => onChange(name, e.target.value)}
-      onBlur={() => onBlur(name)}
-      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-      required
-    />
-  </div>
-);
+}
+  const EditableField = ({
+    label,
+    value,
+    name,
+    onChange,
+    onBlur,
+    type = "text",
+  }) => (
+    <div className="w-full">
+      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+        {label}
+      </label>
+      <input
+        type={type}
+        name={name}
+        id={name}
+        value={value}
+        onChange={(e) => onChange(name, e.target.value)}
+        onBlur={() => onBlur(name)}
+        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+        required
+      />
+    </div>
+  );
+  
 
 export default EventDetails;

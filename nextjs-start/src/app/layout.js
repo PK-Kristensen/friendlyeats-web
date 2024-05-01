@@ -1,5 +1,5 @@
 import './globals.css'
-import Header from "../components/Header";
+import Header from "../../src/components/Header";
 import { getAuthenticatedAppForUser } from "../../src/lib/firebase/firebase";
 import { inter } from './fonts';
 
@@ -18,7 +18,7 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`}>
+      <body className={`${inter.className} `}>
         <Header initialUser={currentUser?.toJSON()} />
         <main>{children}</main>
       </body>

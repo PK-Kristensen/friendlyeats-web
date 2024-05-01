@@ -1,11 +1,16 @@
-'use client'
-import { useState, useEffect } from 'react';
-import AISuggestionBox from '../components/AiEvent/AISuggestionBox';
-import { Canvas } from 'react-three-fiber';
-import { Stars } from '@react-three/drei';
+"use client";
+import { useState, useEffect } from "react";
+import AISuggestionBox from "../components/AiEvent/AISuggestionBox";
+import { Canvas } from "react-three-fiber";
+import { Stars } from "@react-three/drei";
 
-const Typewriter = ({ phrases, typingDelay = 50, deletingDelay = 30, delayBetweenPhrases = 1000 }) => {
-  const [text, setText] = useState('');
+const Typewriter = ({
+  phrases,
+  typingDelay = 50,
+  deletingDelay = 30,
+  delayBetweenPhrases = 1000,
+}) => {
+  const [text, setText] = useState("");
   const [index, setIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [delay, setDelay] = useState(typingDelay);
@@ -14,7 +19,10 @@ const Typewriter = ({ phrases, typingDelay = 50, deletingDelay = 30, delayBetwee
     const handleTyping = () => {
       const currentPhrase = phrases[index];
       const nextPhrase = phrases[(index + 1) % phrases.length];
-      const commonPrefixLength = getCommonPrefixLength(currentPhrase, nextPhrase);
+      const commonPrefixLength = getCommonPrefixLength(
+        currentPhrase,
+        nextPhrase
+      );
 
       if (isDeleting) {
         if (text.length > commonPrefixLength) {
@@ -50,7 +58,7 @@ const Typewriter = ({ phrases, typingDelay = 50, deletingDelay = 30, delayBetwee
 
   return (
     <div className="w-full h-full flex justify-center items-center">
-      <h1 className="text-4xl font-bold">{text ? text : ''}</h1>
+      <h1 className="text-4xl font-bold">{text ? text : ""}</h1>
     </div>
   );
 };
@@ -71,21 +79,20 @@ const AnimatedBackground = () => {
   );
 };
 
-
 export default function Home() {
-	const phrases = [
-	  "Finn ditt neste sted for ditt arrangement",
-	  "Finn underholdning til arrangementet ditt",
-	  "Finn mat til arrangemetet ditt",
-	];
-  
-	return (
-	  <main className="relative p-8 m-4 bg-white shadow rounded-lg overflow-hidden ">
-		<AnimatedBackground />
-		<div className="z-10 relative">
-		  <Typewriter phrases={phrases} />
-		  <AISuggestionBox />
-		</div>
-	  </main>
-	);
-  }
+  const phrases = [
+    "Finn ditt neste sted for ditt arrangement",
+    "Finn underholdning til arrangementet ditt",
+    "Finn mat til arrangemetet ditt",
+  ];
+
+  return (
+    <main className="m-9 rounded-lg">
+      <AnimatedBackground />
+      <div className="relative">
+        <Typewriter phrases={phrases} />
+        <AISuggestionBox />
+      </div>
+    </main>
+  );
+}

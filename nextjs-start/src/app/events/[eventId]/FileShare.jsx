@@ -122,14 +122,15 @@ const FileShare = ({ eventId }) => {
 
   return (
     <div className="max-w-md p-4 bg-white rounded-lg shadow-md mt-6">
-      <h3 className="text-lg font-semibold text-gray-700 mb-4">Filer</h3>
+      <h3 className="text-md font-semibold text-gray-700 mb-4">Filer</h3>
       <div
         {...getRootProps()}
         className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 text-center cursor-pointer hover:bg-blue-50"
+        style={{ fontSize: '0.8rem'}}
       >
         <input {...getInputProps()} />
         <CloudArrowDownIcon className="h-10 w-10 text-blue-500" />
-        <p className="mt-2 text-lg font-medium text-gray-700">
+        <p className="mt-2 text-sm font-medium text-gray-700">
           Slipp filer her, eller klikk for å velge filer
         </p>
       </div>

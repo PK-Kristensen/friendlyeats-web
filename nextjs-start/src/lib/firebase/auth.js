@@ -2,6 +2,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   onAuthStateChanged as _onAuthStateChanged,
+  createUserWithEmailAndPassword
 } from "firebase/auth";
 import { doc, setDoc, getFirestore } from "firebase/firestore"; // Import necessary Firestore functions
 
@@ -71,4 +72,23 @@ export function useUser(req) {
   }, []);
 
   return user;
+}
+
+export async function signInWithEmail(email, password) {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return userCredential.user;
+  } catch (error) {
+    console.error("Error signing in with email and password", error);
+  }
+}
+
+// Function to sign up with Email and Password
+export async function signUpWithEmail(email, password) {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    return userCredential.user;
+  } catch (error) {
+    console.error("Error creating new user with email and password", error);
+  }
 }

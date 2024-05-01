@@ -96,37 +96,38 @@ export default function EventListings({ searchParams }) {
         <h1 className="text-2xl font-bold">Events</h1>
         <CreateEvent />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="flex flex-wrap flex-start gap-4">
         {loading ? (
           <p>Loading...</p>
         ) : events.length > 0 ? (
           events.map((event) => {
             const lastUpdatedString = event.lastUpdated
-            ? formatDistanceToNow(new Date(event.lastUpdated.seconds * 1000), { addSuffix: true })
-            : 'N/A';
-                      return(
-            <Link key={event.id} href={`/events/${event.id}`}>
-              <div className="cursor-pointer rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-300 p-4 relative">
-                <h3 className="text-lg font-semibold">{event.name}</h3>
-                <p className="text-gray-600 mb-8">
-                  {formatEventStartInfo(event.startDate)}
-                </p>
-                {/* Icons and additional event info at the bottom corner */}
-                <div className="absolute bottom-2 left-2 flex items-center space-x-1 text-sm text-gray-500">
-                  <BellIcon className="h-4 w-4" />
-                  <span>{lastUpdatedString ? lastUpdatedString : 'N/A'}</span>
+              ? formatDistanceToNow(new Date(event.lastUpdated.seconds * 1000), { addSuffix: true })
+              : 'N/A';
+            return(
+              <Link key={event.id} href={`/events/${event.id}`}>
+                <div className="cursor-pointer overflow-hidden rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-300 p-4 relative" style={{ width: "16rem", height: "10rem" }}>
+                  <h3 className="text-lg font-semibold">{event.name}</h3>
+                  <p className="text-gray-600 mb-8">
+                    {formatEventStartInfo(event.startDate)}
+                  </p>
+                  <div className="absolute bottom-2 left-2 flex items-center space-x-1 text-sm text-gray-500">
+                    <BellIcon className="h-4 w-4" />
+                    <span>{lastUpdatedString}</span>
+                  </div>
+                  <div className="absolute bottom-2 right-2 flex items-center space-x-1 text-sm text-gray-500">
+                    <UserGroupIcon className="h-4 w-4" />
+                    <span>{event.attendees}</span>
+                  </div>
                 </div>
-                <div className="absolute bottom-2 right-2 flex items-center space-x-1 text-sm text-gray-500">
-                  <UserGroupIcon className="h-4 w-4" />
-                  <span>{event.attendees}</span>
-                </div>
-              </div>
-            </Link>
-          )})
+              </Link>
+            )
+          })
         ) : (
           <p>No events found.</p>
         )}
       </div>
     </div>
   );
+  
 }

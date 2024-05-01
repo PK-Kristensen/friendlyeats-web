@@ -25,6 +25,9 @@
 		"react-google-autocomplete": "^2.7.3",
 		"react-quill": "^2.0.0",
 		"react-select": "^5.8.0",
+		"react-split": "^2.0.14",
+		"react-split-pane-v2": "^1.0.3",
+		"react-table": "^7.8.0",
 		"react-three-fiber": "^6.0.13",
 		"request": "^2.88.2"
 	},

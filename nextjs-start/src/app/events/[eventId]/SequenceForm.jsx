@@ -146,8 +146,16 @@ const SequenceForm = ({ eventId, eventDay, user }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 bg-white rounded-lg shadow-md">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
+    <form onSubmit={handleSubmit} className="p-4 bg-white rounded-lg shadow-md mt-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
+      <div className="md:col-span-1">
+          <label
+            htmlFor="Ny sekvens"
+            className="text-sm font-medium text-blue-700 text-center pt-5"
+          >
+            Ny sekvens
+          </label>
+        </div>
         <div className="md:col-span-2">
           <label
             htmlFor="startTime"
@@ -161,8 +169,9 @@ const SequenceForm = ({ eventId, eventDay, user }) => {
             type="time"
             value={sequenceData.startTime}
             onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            className="mt-1 block w-full px-2 py-1 text-xs border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             required
+            style={{ fontSize: '0.8rem' }} // Inline style for font-size
           />
         </div>
         <div className="md:col-span-2">
@@ -178,13 +187,14 @@ const SequenceForm = ({ eventId, eventDay, user }) => {
             type="number"
             value={sequenceData.durationMinutes}
             onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            className="mt-1 block w-full px-2 py-1 text-xs border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             placeholder="Minutter"
             min="0"
             required
+            style={{ fontSize: '0.8rem' }} // Inline style for font-size
           />
         </div>
-        <div className="md:col-span-8">
+        <div className="md:col-span-6">
           <label
             htmlFor="header"
             className="block text-sm font-medium text-gray-700"
@@ -196,21 +206,24 @@ const SequenceForm = ({ eventId, eventDay, user }) => {
             name="header"
             value={sequenceData.header}
             onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            className="mt-1 block w-full px-2 py-1 text-xs border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             placeholder="Sekvens tittel"
+            style={{ fontSize: '0.8rem' }} // Inline style for font-size
           />
         </div>
       </div>
       <div className="mt-2 text-right">
         <button
           type="submit"
-          className="inline-flex justify-center px-4 py-1 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="inline-flex justify-center px-3 py-1 text-xs font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          style={{ fontSize: '0.8rem' }} // Inline style for font-size
         >
           Legg til sekvens
         </button>
       </div>
     </form>
   );
+  
 };
 
 export default SequenceForm;
