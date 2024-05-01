@@ -1,3 +1,20 @@
 lib/firebase/config.js
 .next/
 .firebase/
+
+# Ignore Next.js build output
+.next/
+out/
+
+# ignore firebase config
+firebase-config.js
+
+#ignore env
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ignore node_modules
+node_modules/
