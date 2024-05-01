@@ -10,7 +10,7 @@ import {
   getDocs,
   serverTimestamp,
 } from "firebase/firestore";
-import { db } from "../../../lib/firebase/firebase";
+import { db } from "../../../src/lib/firebase/firebase";
 import Select from "react-select";
 import debounce from "lodash.debounce";
 import { arrayUnion } from "firebase/firestore";

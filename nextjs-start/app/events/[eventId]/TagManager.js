@@ -1,6 +1,6 @@
 // TagManager.js
 import React, { useState, useEffect } from 'react';
-import { db } from '../../../lib/firebase/firebase';
+import { db } from '../../../src/lib/firebase/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useEventPlan } from './EventPlanContext';
 import { writeBatch } from 'firebase/firestore';

@@ -10,7 +10,7 @@ import {
   doc,
   setDoc,
 } from "firebase/firestore";
-import { db } from "../../../lib/firebase/firebase";
+import { db } from "../../../src/lib/firebase/firebase";
 import EventDay from "./EventDay";
 import EventDaySlim from "./EventDaySlim";
 import EventForm from "./EventForm";

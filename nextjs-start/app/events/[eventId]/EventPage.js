@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { db } from '../../../lib/firebase/firebase';
+import { db } from '../../../src/lib/firebase/firebase';
 import {
   onSnapshot,
   addDoc,
@@ -111,7 +111,7 @@ export default function EventPage({ user, eventId}) {
   }
 
   return (
-    <div className="flex flex-col max-w-14xl p-4 space-y-4 flex-start">
+    <div className="flex flex-col max-w-14xl p-4 space-y-4">
       <div className="flex-1">
         <EventDetails event={event} eventId={eventId} setEvent={setEvent} user={user} />
       </div>

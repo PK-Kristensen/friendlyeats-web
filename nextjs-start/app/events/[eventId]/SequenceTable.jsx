@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { useTable, useSortBy } from "react-table";
-import { db } from "../../../lib/firebase/firebase";
+import { db } from "../../../src/lib/firebase/firebase";
 import {
   doc,
   writeBatch,
@@ -15,7 +15,7 @@ import {
   calculateEndTime,
   calculateDuration,
   getRandomColor,
-} from "../../../lib/utilsFunctions";
+} from "../../../src/lib/utilsFunctions";
 import { useEventPlan } from "./EventPlanContext";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Include the Quill CSS

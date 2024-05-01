@@ -1,6 +1,6 @@
 import './globals.css'
-import Header from "../../src/components/Header";
-import { getAuthenticatedAppForUser } from "../../src/lib/firebase/firebase";
+import Header from "../src/components/Header";
+import { getAuthenticatedAppForUser } from "../src/lib/firebase/firebase";
 import { inter } from './fonts';
 
 // Force next.js to treat this route as server-side rendered

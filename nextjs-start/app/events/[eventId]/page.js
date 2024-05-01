@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import EventPage from "./EventPage";
 import EventLog from "./EventLog";
 import FileShare from "./FileShare";
-import { getUser } from "../../../lib/getUser";
+import { getUser } from "../../../src/lib/getUser";
 import { EventPlanProvider } from "./EventPlanContext";
 //ArrowLeftOnRectangleIcon
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";

@@ -13,7 +13,7 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
-import { db } from "../../../lib/firebase/firebase";
+import { db } from "../../../src/lib/firebase/firebase";
 
 const SequenceForm = ({ eventId, eventDay, user }) => {
   const [sequenceData, setSequenceData] = useState({

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import AISuggestionBox from "../components/AiEvent/AISuggestionBox";
+import AISuggestionBox from "../src/components/AiEvent/AISuggestionBox";
 import { Canvas } from "react-three-fiber";
 import { Stars } from "@react-three/drei";
 

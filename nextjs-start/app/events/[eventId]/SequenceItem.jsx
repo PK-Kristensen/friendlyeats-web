@@ -7,13 +7,13 @@ import {
   getDoc,
   serverTimestamp,
 } from "firebase/firestore";
-import { db } from "../../../lib/firebase/firebase";
+import { db } from "../../../src/lib/firebase/firebase";
 import debounce from "lodash/debounce";
 import {
   calculateEndTime,
   calculateDuration,
   getRandomColor,
-} from "../../../lib/utilsFunctions";
+} from "../../../src/lib/utilsFunctions";
 import { useEventPlan } from "./EventPlanContext";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Include the Quill CSS

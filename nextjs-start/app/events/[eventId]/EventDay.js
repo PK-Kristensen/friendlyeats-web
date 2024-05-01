@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import SequenceTable from "./SequenceTable";
+import SequenceItem from "./SequenceItem";
 import SequenceForm from "./SequenceForm";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import {
@@ -15,9 +15,9 @@ import {
   writeBatch,
   serverTimestamp,
 } from "firebase/firestore";
-import { db } from "../../../lib/firebase/firebase";
+import { db } from "../../../src/lib/firebase/firebase";
 
-const EventDaySlim = ({ eventDay, eventId, user }) => {
+const EventDay = ({ eventDay, eventId, user }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [editedTitle, setEditedTitle] = useState(eventDay.title);
@@ -26,6 +26,7 @@ const EventDaySlim = ({ eventDay, eventId, user }) => {
   );
 
   console.log(eventDay);
+
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -74,6 +75,7 @@ const EventDaySlim = ({ eventDay, eventId, user }) => {
       batch.update(sequenceRef, { index: sequence.index + 1 });
     });
 
+    
     // Define the new sequence to add
     const newSequence = {
       header: "",
@@ -156,7 +158,7 @@ const EventDaySlim = ({ eventDay, eventId, user }) => {
   };
 
   return (
-    <div className="rounded-lg bg-blue-100 p-3 shadow-md overflow-x-auto">
+    <div className="rounded-lg bg-blue-100 p-3 shadow-md mb-4">
       {" "}
       {/* reduced padding */}
       <div className="flex items-center justify-between">
@@ -238,45 +240,20 @@ const EventDaySlim = ({ eventDay, eventId, user }) => {
           </>
         )}
       </div>
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">
-              Index
-            </th>
-            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Start Time
-            </th>
-            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              End Time
-            </th>
-            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">
-              Duration (min)
-            </th>
-            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Title
-            </th>
-            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Notes
-            </th>
-          </tr>
-        </thead>
-
-        <tbody className="bg-white divide-y divide-gray-200">
-          {eventDay.sequences?.map((sequence, index) => (
-            <SequenceTable
-              key={sequence.id}
-              sequence={sequence}
-              eventId={eventId}
-              eventDayId={eventDay.id}
-              user={user}
-            />
-          ))}
-        </tbody>
-      </table>
-      <SequenceForm eventId={eventId} eventDay={eventDay} user={user} />
+      {eventDay.sequences?.map((sequence, index) => (
+        <SequenceItem
+          key={sequence.id}
+          sequence={sequence}
+          eventId={eventId}
+          eventDayId={eventDay.id}
+          onAddSequence={handleAddSequence}
+          onDeleteSequence={handleDeleteSequence}
+          user={user}
+        />
+      ))}
+      <SequenceForm eventId={eventId} eventDay={eventDay} user={user}/>
     </div>
   );
 };
 
-export default EventDaySlim;
+export default EventDay;

@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { doc, onSnapshot, getDoc } from 'firebase/firestore';
-import { db } from '../../../lib/firebase/firebase';
+import { db } from '../../../src/lib/firebase/firebase';
 import { formatDistanceToNowStrict } from 'date-fns';
 
 const EventLog = ({ eventId }) => {
